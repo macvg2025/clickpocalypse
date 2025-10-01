@@ -22,10 +22,15 @@
 
 Clickpocalypse/
 │
+
 ├── index.html <-- Main game page
+
 ├── style.css <-- Visuals and animations
+
 ├── script.js <-- Game logic
+
 ├── data.json <-- All upgrades, buildings, events, achievements
+
 └── assets/ <-- Images, icons, sounds
 
 
