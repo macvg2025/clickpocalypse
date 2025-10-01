@@ -20,3 +20,21 @@
 
 ## File Structure
 
+Clickpocalypse/
+│
+├── index.html <-- Main game page
+├── style.css <-- Visuals and animations
+├── script.js <-- Game logic
+├── data.json <-- All upgrades, buildings, events, achievements
+└── assets/ <-- Images, icons, sounds
+
+
+## Contribution
+
+Want to make the chaos even bigger? Pull requests are welcome! Add new upgrades, events, achievements, or visual effects.
+
+---
+
+*WARNING: Playing Clickpocalypse may cause extreme finger exhaustion, brain overload, and cosmic confusion.*
+
+
