@@ -100,3 +100,60 @@
     75% { transform: translate(-5px,5px); }
     100% { transform: translate(0,0); }
 }
+/* ===== PAGE LAYOUT ===== */
+body {
+    font-family: 'Arial', sans-serif;
+    background: radial-gradient(circle at center, #000000, #0d0d0d);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 3em;
+    text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff; }
+    50% { text-shadow: 0 0 25px #ff00ff, 0 0 50px #ff00ff; }
+    100% { text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff; }
+}
+
+section {
+    border: 2px solid #5e0bff;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 600px;
+    background: rgba(20, 0, 40, 0.8);
+    box-shadow: 0 0 20px #ff00ff inset, 0 0 40px #5e0bff;
+}
+
+#click-area {
+    margin-bottom: 30px;
+}
+
+#click-count {
+    font-size: 1.5em;
+    margin-top: 10px;
+    text-shadow: 0 0 10px #ff00ff;
+}
+
+#upgrades-section h2,
+#buildings-section h2,
+#achievements-section h2,
+#events-section h2 {
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+#events-panel {
+    min-height: 50px;
+    max-height: 150px;
+    overflow-y: auto;
+    text-align: left;
+    padding: 5px;
+}
