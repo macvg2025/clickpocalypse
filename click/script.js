@@ -154,6 +154,19 @@ function showEvent(message) {
     // Remove after 5 seconds
     setTimeout(() => p.remove(), 5000);
 }
+const blackHole = document.getElementById('black-hole');
+
+blackHole.addEventListener('click', () => {
+    totalClicks += clickPower;
+    displayClickCount();
+
+    // Tiny click animation
+    blackHole.classList.add('click-animate');
+    setTimeout(() => blackHole.classList.remove('click-animate'), 100);
+
+    // Particle burst
+    createClickParticles();
+});
 
 // --- Building production loop ---
 setInterval(() => {
