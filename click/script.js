@@ -1,8 +1,9 @@
+// ======== GAME DATA ========
 let gameData = {};
 let totalClicks = 0;
 let clickPower = 1; // base click
 
-// Fetch JSON
+// ======== FETCH JSON ========
 fetch('click/data.json')
   .then(response => response.json())
   .then(data => {
@@ -12,7 +13,7 @@ fetch('click/data.json')
   })
   .catch(error => console.error('Error loading game data:', error));
 
-// Initialize game
+// ======== INITIALIZE GAME ========
 function initGame() {
     displayClickCount();
     displayUpgrades();
@@ -20,16 +21,24 @@ function initGame() {
     displayAchievements();
     startEventLoop();
     startAchievementCheck();
+    startBuildingProduction();
 }
 
-// --- Click system ---
-const mainClickBtn = document.getElementById('main-click');
-mainClickBtn.addEventListener('click', () => {
+// ======== CLICK SYSTEM ========
+const blackHole = document.getElementById('black-hole');
+blackHole.addEventListener('click', () => {
     totalClicks += clickPower;
     displayClickCount();
+
+    // Black hole click animation
+    blackHole.classList.add('click-animate');
+    setTimeout(() => blackHole.classList.remove('click-animate'), 100);
+
+    // Particle burst
+    createClickParticles();
 });
 
-// Update click count display
+// ======== DISPLAY FUNCTIONS ========
 function displayClickCount() {
     document.getElementById('click-count').textContent = `Clicks: ${totalClicks}`;
 }
@@ -38,7 +47,6 @@ function displayClickCount() {
 function displayUpgrades() {
     const upgradesList = document.getElementById('upgrades-list');
     upgradesList.innerHTML = '';
-
     gameData.clickUpgrades.forEach((upgrade, index) => {
         const div = document.createElement('div');
         div.className = 'upgrade';
@@ -58,7 +66,13 @@ function buyUpgrade(index) {
         totalClicks -= upgrade.cost;
         clickPower *= upgrade.multiplier || 1;
         displayClickCount();
-        console.log(`Bought upgrade: ${upgrade.name}, new click power: ${clickPower}`);
+
+        const upgradeDiv = document.getElementById('upgrades-list').children[index];
+        upgradeDiv.classList.add('bought');
+        setTimeout(() => upgradeDiv.classList.remove('bought'), 300);
+
+        showEvent(`Upgrade purchased: ${upgrade.name}!`);
+        console.log(`Bought upgrade: ${upgrade.name}, click power: ${clickPower}`);
     }
 }
 
@@ -66,7 +80,6 @@ function buyUpgrade(index) {
 function displayBuildings() {
     const buildingsList = document.getElementById('buildings-list');
     buildingsList.innerHTML = '';
-
     gameData.buildings.forEach((building, index) => {
         const div = document.createElement('div');
         div.className = 'building';
@@ -86,7 +99,13 @@ function buyBuilding(index) {
         totalClicks -= building.cost;
         building.amount = (building.amount || 0) + 1;
         displayClickCount();
-        console.log(`Bought building: ${building.name}, total owned: ${building.amount}`);
+
+        const buildingDiv = document.getElementById('buildings-list').children[index];
+        buildingDiv.classList.add('bought');
+        setTimeout(() => buildingDiv.classList.remove('bought'), 300);
+
+        showEvent(`Building acquired: ${building.name}!`);
+        console.log(`Bought building: ${building.name}, total: ${building.amount}`);
     }
 }
 
@@ -94,7 +113,6 @@ function buyBuilding(index) {
 function displayAchievements() {
     const achievementsList = document.getElementById('achievements-list');
     achievementsList.innerHTML = '';
-
     gameData.achievements.forEach(ach => {
         const div = document.createElement('div');
         div.className = 'achievement locked';
@@ -115,26 +133,23 @@ function startAchievementCheck() {
                 const div = achievementsList.children[index];
                 div.classList.remove('locked');
                 div.classList.add('unlocked');
-                console.log(`Achievement unlocked: ${ach.name}`);
-                // Optional: trigger visual effect
                 showEvent(`Achievement Unlocked: ${ach.name}!`);
+                console.log(`Achievement unlocked: ${ach.name}`);
             }
         });
     }, 1000);
 }
 
-// --- Events / Chaos ---
+// --- EVENTS / CHAOS ---
 function startEventLoop() {
     setInterval(() => {
         if(!gameData.events) return;
-
-        // small chance every second to trigger a random event
         if(Math.random() < 0.1) { 
             const randomIndex = Math.floor(Math.random() * gameData.events.length);
             const event = gameData.events[randomIndex];
-            showEvent(event.message);
+            triggerEvent(event.message, event.shake || false);
+
             if(event.clickMultiplier) clickPower *= event.clickMultiplier;
-            // Event lasts for a few seconds if it has duration
             if(event.duration) {
                 setTimeout(() => {
                     if(event.clickMultiplier) clickPower /= event.clickMultiplier;
@@ -144,34 +159,47 @@ function startEventLoop() {
     }, 1000);
 }
 
-// Display events in the events panel
 function showEvent(message) {
     const eventsPanel = document.getElementById('events-panel');
     const p = document.createElement('p');
     p.textContent = message;
     p.className = 'event-message';
     eventsPanel.appendChild(p);
-    // Remove after 5 seconds
     setTimeout(() => p.remove(), 5000);
 }
-const blackHole = document.getElementById('black-hole');
 
-blackHole.addEventListener('click', () => {
-    totalClicks += clickPower;
-    displayClickCount();
+function triggerEvent(message, shake = false) {
+    showEvent(message);
+    if(shake) {
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 300);
+    }
+}
 
-    // Tiny click animation
-    blackHole.classList.add('click-animate');
-    setTimeout(() => blackHole.classList.remove('click-animate'), 100);
+// --- PARTICLES ---
+function createClickParticles() {
+    for(let i = 0; i < 6; i++){ // multiple particles per click
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = blackHole.offsetLeft + 40 + 'px';
+        particle.style.top = blackHole.offsetTop + 40 + 'px';
+        document.body.appendChild(particle);
 
-    // Particle burst
-    createClickParticles();
-});
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 50 + 20;
+        particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+        particle.style.opacity = '0';
 
-// --- Building production loop ---
-setInterval(() => {
-    gameData.buildings.forEach(building => {
-        if(building.amount) totalClicks += building.production * building.amount;
-    });
-    displayClickCount();
-}, 1000);
+        setTimeout(() => particle.remove(), 500);
+    }
+}
+
+// --- BUILDING PRODUCTION LOOP ---
+function startBuildingProduction() {
+    setInterval(() => {
+        gameData.buildings.forEach(building => {
+            if(building.amount && building.production) totalClicks += building.production * building.amount;
+        });
+        displayClickCount();
+    }, 1000);
+}
