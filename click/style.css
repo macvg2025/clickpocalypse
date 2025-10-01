@@ -1,1 +1,13 @@
+#black-hole {
+    width: 80px;             /* adjust size as needed */
+    height: 80px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    transition: transform 0.1s;
+}
+
+#black-hole.click-animate {
+    transform: scale(1.2) rotate(15deg);  /* tiny zoom + rotation for click effect */
+}
 
