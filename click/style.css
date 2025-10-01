@@ -10,4 +10,70 @@
 #black-hole.click-animate {
     transform: scale(1.2) rotate(15deg);  /* tiny zoom + rotation for click effect */
 }
+.upgrade {
+    border: 2px solid #5e0bff;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0;
+    background: linear-gradient(90deg, #1a0a2f, #3b0cff);
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.upgrade.bought {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff inset;
+}
+.building {
+    border: 2px solid #00ffea;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px 0;
+    background: linear-gradient(90deg, #002f3b, #00ffd6);
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.building.bought {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #00ffff, 0 0 50px #00ffff inset;
+}
+.achievement {
+    border: 2px solid #ffd700;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 3px 0;
+    background: #222;
+    color: #fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.achievement.unlocked {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #ffff00, 0 0 50px #ffd700 inset;
+    color: #fffa80;
+}
+.event-message {
+    font-weight: bold;
+    color: #ff00ff;
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Optional screen shake effect */
+.shake {
+    animation: shakeScreen 0.3s;
+}
+
+@keyframes shakeScreen {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(-5px,5px); }
+    50% { transform: translate(5px,-5px); }
+    75% { transform: translate(-5px,5px); }
+    100% { transform: translate(0,0); }
+}
 
