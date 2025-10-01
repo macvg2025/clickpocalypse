@@ -4,37 +4,44 @@
     <meta charset="UTF-8">
     <title>Clickpocalypse</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="assets/blackhole.png">
 </head>
 <body>
-    <!-- Main click button -->
-<div id="click-area">
-    <img id="black-hole" src="assets/blackhole.png" alt="Mini Black Hole">
-    <p id="click-count">Clicks: 0</p>
-</div>
+    <header>
+        <h1>Clickpocalypse</h1>
+    </header>
 
+    <!-- Click Area -->
+    <section id="click-area">
+        <img id="black-hole" src="assets/blackhole.png" alt="Mini Black Hole">
+        <p id="click-count">Clicks: 0</p>
+    </section>
 
-    <!-- Buildings panel -->
-    <div id="buildings-panel">
+    <!-- Upgrades -->
+    <section id="upgrades-section">
+        <h2>Click Upgrades</h2>
+        <div id="upgrades-list"></div>
+    </section>
+
+    <!-- Buildings -->
+    <section id="buildings-section">
         <h2>Buildings</h2>
         <div id="buildings-list"></div>
-    </div>
+    </section>
 
-    <!-- Upgrades panel -->
-    <div id="upgrades-panel">
-        <h2>Upgrades</h2>
-        <div id="upgrades-list"></div>
-    </div>
-
-    <!-- Achievements panel -->
-    <div id="achievements-panel">
+    <!-- Achievements -->
+    <section id="achievements-section">
         <h2>Achievements</h2>
         <div id="achievements-list"></div>
-    </div>
+    </section>
 
-    <!-- Events / Chaos messages -->
-    <div id="events-panel"></div>
+    <!-- Events Panel -->
+    <section id="events-section">
+        <h2>Events</h2>
+        <div id="events-panel"></div>
+    </section>
 
+    <!-- JS -->
     <script src="script.js"></script>
 </body>
 </html>
-
