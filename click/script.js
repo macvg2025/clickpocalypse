@@ -18,6 +18,8 @@ function initGame() {
     displayUpgrades();
     displayBuildings();
     displayAchievements();
+    startEventLoop();
+    startAchievementCheck();
 }
 
 // --- Click system ---
@@ -29,8 +31,7 @@ mainClickBtn.addEventListener('click', () => {
 
 // Update click count display
 function displayClickCount() {
-    const clickCountEl = document.getElementById('click-count');
-    clickCountEl.textContent = `Clicks: ${totalClicks}`;
+    document.getElementById('click-count').textContent = `Clicks: ${totalClicks}`;
 }
 
 // --- Upgrades ---
@@ -55,11 +56,9 @@ function buyUpgrade(index) {
     const upgrade = gameData.clickUpgrades[index];
     if(totalClicks >= upgrade.cost) {
         totalClicks -= upgrade.cost;
-        clickPower *= upgrade.multiplier;
+        clickPower *= upgrade.multiplier || 1;
         displayClickCount();
         console.log(`Bought upgrade: ${upgrade.name}, new click power: ${clickPower}`);
-    } else {
-        console.log(`Not enough clicks for ${upgrade.name}`);
     }
 }
 
@@ -67,8 +66,6 @@ function buyUpgrade(index) {
 function displayBuildings() {
     const buildingsList = document.getElementById('buildings-list');
     buildingsList.innerHTML = '';
-
-    if(!gameData.buildings) return;
 
     gameData.buildings.forEach((building, index) => {
         const div = document.createElement('div');
@@ -87,12 +84,9 @@ function buyBuilding(index) {
     const building = gameData.buildings[index];
     if(totalClicks >= building.cost) {
         totalClicks -= building.cost;
-        if(!building.amount) building.amount = 0;
-        building.amount++;
+        building.amount = (building.amount || 0) + 1;
         displayClickCount();
         console.log(`Bought building: ${building.name}, total owned: ${building.amount}`);
-    } else {
-        console.log(`Not enough clicks for ${building.name}`);
     }
 }
 
@@ -101,11 +95,9 @@ function displayAchievements() {
     const achievementsList = document.getElementById('achievements-list');
     achievementsList.innerHTML = '';
 
-    if(!gameData.achievements) return;
-
     gameData.achievements.forEach(ach => {
         const div = document.createElement('div');
-        div.className = 'achievement';
+        div.className = 'achievement locked';
         div.innerHTML = `
             <h4>${ach.name}</h4>
             <p>${ach.requirement}</p>
@@ -114,13 +106,59 @@ function displayAchievements() {
     });
 }
 
-// --- Basic building production loop ---
-setInterval(() => {
-    if(!gameData.buildings) return;
+function startAchievementCheck() {
+    setInterval(() => {
+        const achievementsList = document.getElementById('achievements-list');
+        gameData.achievements.forEach((ach, index) => {
+            if(!ach.unlocked && totalClicks >= ach.requirementValue) {
+                ach.unlocked = true;
+                const div = achievementsList.children[index];
+                div.classList.remove('locked');
+                div.classList.add('unlocked');
+                console.log(`Achievement unlocked: ${ach.name}`);
+                // Optional: trigger visual effect
+                showEvent(`Achievement Unlocked: ${ach.name}!`);
+            }
+        });
+    }, 1000);
+}
 
+// --- Events / Chaos ---
+function startEventLoop() {
+    setInterval(() => {
+        if(!gameData.events) return;
+
+        // small chance every second to trigger a random event
+        if(Math.random() < 0.1) { 
+            const randomIndex = Math.floor(Math.random() * gameData.events.length);
+            const event = gameData.events[randomIndex];
+            showEvent(event.message);
+            if(event.clickMultiplier) clickPower *= event.clickMultiplier;
+            // Event lasts for a few seconds if it has duration
+            if(event.duration) {
+                setTimeout(() => {
+                    if(event.clickMultiplier) clickPower /= event.clickMultiplier;
+                }, event.duration * 1000);
+            }
+        }
+    }, 1000);
+}
+
+// Display events in the events panel
+function showEvent(message) {
+    const eventsPanel = document.getElementById('events-panel');
+    const p = document.createElement('p');
+    p.textContent = message;
+    p.className = 'event-message';
+    eventsPanel.appendChild(p);
+    // Remove after 5 seconds
+    setTimeout(() => p.remove(), 5000);
+}
+
+// --- Building production loop ---
+setInterval(() => {
     gameData.buildings.forEach(building => {
         if(building.amount) totalClicks += building.production * building.amount;
     });
-
     displayClickCount();
 }, 1000);
